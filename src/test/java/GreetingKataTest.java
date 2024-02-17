@@ -12,7 +12,7 @@ public class GreetingKataTest {
 
     @Test
     public void takeNoName_shouldGreetMyFriend() {
-        Assert.assertEquals("Hello, my friend.", greetingKata.greet());
+        Assert.assertEquals("Hello, my friend.", greetingKata.greet((String) null));
     }
 
     @Test
@@ -22,6 +22,9 @@ public class GreetingKataTest {
 
     @Test
     public void takeBobAndJane_shouldGreetBobAndJane() {
-        Assert.assertEquals("Hello, Bob and Jane.", greetingKata.greet("Bob", "Jane"));
+        Assert.assertEquals(
+                "Hello, Bob and Jane.",
+                greetingKata.greet("Bob", "Jane")
+        );
     }
 }
