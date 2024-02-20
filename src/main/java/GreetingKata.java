@@ -1,32 +1,80 @@
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class GreetingKata {
 
-    public String greet(String... names) {
-        if (nameIsEmptyOrNull(names)) {
-            return "Hello, my friend.";
-        }
+    private final ArrayList<String> normalNames = new ArrayList<>();
+    private final ArrayList<String> shoutedNames = new ArrayList<>();
 
-        String namesConcat = names[0];
-        int i = 1;
-        while (i < names.length - 1) {
-            namesConcat += ", " + names[i];
+    public String greet(String... names) {
+        reset();
+        separateNames(names);
+
+        return formatGreeting(
+            concatNames(normalNames),
+            concatNames(shoutedNames)
+        );
+    }
+
+    public void reset() {
+        normalNames.clear();
+        shoutedNames.clear();
+    }
+
+    private void separateNames(String[] names) {
+        boolean foundNullName = false;
+        for (String name : names) {
+            if (Objects.isNull(name)) {
+                foundNullName = true;
+            } else if (isShouted(name)) {
+                shoutedNames.add(name);
+            } else {
+                normalNames.add(name);
+            }
+        }
+        if (names.length == 0 || foundNullName) {
+            normalNames.add("my friend");
+        }
+    }
+
+    private StringBuilder concatNames(ArrayList<String> names) {
+        StringBuilder concat = new StringBuilder();
+        int i = 0;
+        while (i < names.size()) {
+            if (!loopFirst(i)) {
+                if (loopLast(i, names.size())) {
+                    concat.append(" and ");
+                } else {
+                    concat.append(", ");
+                }
+            }
+            concat.append(names.get(i));
             i++;
         }
-        if (i < names.length) {
-            namesConcat += " and " + names[names.length - 1];
-        }
-
-        if (nameIsAllUpperCase(names[0])) {
-            return "HELLO " + names[0] + "!";
-        }
-        return "Hello, " + namesConcat + ".";
+        return concat;
     }
 
-    protected boolean nameIsEmptyOrNull(String[] names) {
-        return names.length == 0 || names[0] == null;
+    private String formatGreeting(StringBuilder normalConcat, StringBuilder shoutedConcat) {
+        StringBuilder output = new StringBuilder();
+        if (!normalNames.isEmpty()) {
+            output.append("Hello, ").append(normalConcat).append(".");
+        }
+        if (!shoutedNames.isEmpty()) {
+            if (!normalNames.isEmpty()) {
+                output.append(" AND ");
+            }
+            output.append("HELLO ").append(shoutedConcat.toString().toUpperCase()).append("!");
+        }
+        return output.toString();
     }
 
-    protected boolean nameIsAllUpperCase(String name) {
+    protected boolean isShouted(String name) {
         return name.equals(name.toUpperCase());
+    }
+    protected boolean loopFirst(int i) {
+        return i == 0;
+    }
+    protected boolean loopLast(int i, int size) {
+        return i == size - 1;
     }
 }
