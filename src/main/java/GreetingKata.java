@@ -33,13 +33,25 @@ public class GreetingKata {
                 foundNullName = true;
                 continue;
             }
-            if (hasComma(name)) {
+            boolean isEscaped = isEscaped(name);
+            if (!isEscaped && hasComma(name)) {
                 separateNames(name.split(","));
-            } else if (isShouted(name)) {
-                shoutedNames.add(name.trim());
-            } else {
-                normalNames.add(name.trim());
+                continue;
             }
+
+            if (isEscaped) {
+                addNameToProperList(name.replace("\"", ""));
+            } else {
+                addNameToProperList(name);
+            }
+        }
+    }
+
+    private void addNameToProperList(String name) {
+        if (isShouted(name)) {
+            shoutedNames.add(name.trim());
+        } else {
+            normalNames.add(name.trim());
         }
     }
 
@@ -85,5 +97,8 @@ public class GreetingKata {
     }
     protected boolean hasComma(String name) {
         return name.contains(",");
+    }
+    protected boolean isEscaped(String name) {
+        return name.matches("^\\\".*.\\\"$");
     }
 }

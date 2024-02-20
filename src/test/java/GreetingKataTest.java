@@ -61,11 +61,24 @@ public class GreetingKataTest {
     public void nameWithComma_shouldBeConsideredAsAnInput() {
         Assert.assertEquals(
             "Hello, Bob and Jane. AND HELLO DIANA!",
-                greetingKata.greet("Bob", "DIANA,Jane")
+            greetingKata.greet("Bob", "DIANA,Jane")
         );
         Assert.assertEquals(
             "Hello, Bob and Jane. AND HELLO DIANA!",
-                greetingKata.greet("Bob", "DIANA  ,  Jane")
+            greetingKata.greet("Bob", "DIANA  ,  Jane")
+        );
+    }
+
+    @Test
+    public void nameEscapedLikeCSVField_shouldNotBeConsideredAsAnInput() {
+        Assert.assertTrue(greetingKata.isEscaped("\"Charlie, Dianne\""));
+        Assert.assertFalse(greetingKata.isEscaped("\"Charlie, D\"ianne"));
+        Assert.assertFalse(greetingKata.isEscaped("Char\"lie, D\"ianne"));
+        Assert.assertFalse(greetingKata.isEscaped("Char\"lie, Dianne\""));
+
+        Assert.assertEquals(
+            "Hello, Bob and Charlie, Dianne.",
+            greetingKata.greet("Bob", "\"Charlie, Dianne\"")
         );
     }
 }
