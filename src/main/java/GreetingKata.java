@@ -3,12 +3,17 @@ import java.util.Objects;
 
 public class GreetingKata {
 
+    private boolean foundNullName = false;
     private final ArrayList<String> normalNames = new ArrayList<>();
     private final ArrayList<String> shoutedNames = new ArrayList<>();
 
     public String greet(String... names) {
         reset();
+
         separateNames(names);
+        if (names.length == 0 || foundNullName) {
+            normalNames.add("my friend");
+        }
 
         return formatGreeting(
             concatNames(normalNames),
@@ -17,23 +22,24 @@ public class GreetingKata {
     }
 
     public void reset() {
+        foundNullName = false;
         normalNames.clear();
         shoutedNames.clear();
     }
 
     private void separateNames(String[] names) {
-        boolean foundNullName = false;
         for (String name : names) {
             if (Objects.isNull(name)) {
                 foundNullName = true;
-            } else if (isShouted(name)) {
-                shoutedNames.add(name);
-            } else {
-                normalNames.add(name);
+                continue;
             }
-        }
-        if (names.length == 0 || foundNullName) {
-            normalNames.add("my friend");
+            if (hasComma(name)) {
+                separateNames(name.split(","));
+            } else if (isShouted(name)) {
+                shoutedNames.add(name.trim());
+            } else {
+                normalNames.add(name.trim());
+            }
         }
     }
 
@@ -76,5 +82,8 @@ public class GreetingKata {
     }
     protected boolean loopLast(int i, int size) {
         return i == size - 1;
+    }
+    protected boolean hasComma(String name) {
+        return name.contains(",");
     }
 }

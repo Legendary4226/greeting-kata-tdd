@@ -52,8 +52,20 @@ public class GreetingKataTest {
             greetingKata.greet("BOB", "Amy", "Charlotte", "BRIAN")
         );
         Assert.assertEquals(
-                "Hello, Amy and Charlotte. AND HELLO BOB, JILL AND BRIAN!",
-                greetingKata.greet("BOB", "Amy", "Charlotte", "JILL", "BRIAN")
+            "Hello, Amy and Charlotte. AND HELLO BOB, JILL AND BRIAN!",
+            greetingKata.greet("BOB", "Amy", "Charlotte", "JILL", "BRIAN")
+        );
+    }
+
+    @Test
+    public void nameWithComma_shouldBeConsideredAsAnInput() {
+        Assert.assertEquals(
+            "Hello, Bob and Jane. AND HELLO DIANA!",
+                greetingKata.greet("Bob", "DIANA,Jane")
+        );
+        Assert.assertEquals(
+            "Hello, Bob and Jane. AND HELLO DIANA!",
+                greetingKata.greet("Bob", "DIANA  ,  Jane")
         );
     }
 }
